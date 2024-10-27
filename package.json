@@ -1,0 +1,20 @@
+{
+    "name": "vs",
+    "version": "1.0.0",
+    "description": "compare",
+    "main": "app.js",
+    "type": "module",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "author": "anoop",
+    "license": "ISC",
+    "keywords": [],
+    "dependencies": {
+        "body-parser": "^1.20.3",
+        "express": "^4.21.1",
+        "iconv-lite": "^0.6.3",
+        "node-fetch": "^3.3.2",
+        "openai": "^4.68.4"
+    }
+}

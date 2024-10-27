@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technology Comparison</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .input-field {
+            width: 300px;
+            padding: 10px;
+            margin: 10px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            outline: none;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .input-field:hover, .input-field:focus {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .cards {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            min-height: 200px;
+            text-align: left;
+            color: #fff;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: white;
+            font-size: 0.9em;
+        }
+
+        /* Loader Styles */
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1.5s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Compare Technologies</h1>
+        <form id="compareForm">
+            <input type="text" class="input-field" id="tech1" placeholder="Enter first technology">
+            <input type="text" class="input-field" id="tech2" placeholder="Enter second technology">
+            <button type="submit" class="button">Compare</button>
+        </form>
+        <div class="loader" id="loader"></div> <!-- Loader Element -->
+        <div class="cards" id="comparisonResults">
+            <!-- Comparison cards will be inserted here -->
+             
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('compareForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const tech1 = document.getElementById('tech1').value;
+            const tech2 = document.getElementById('tech2').value;
+            const loader = document.getElementById('loader'); // Get loader element
+            const comparisonResults = document.getElementById('comparisonResults');
+
+            if (!tech1 || !tech2) {
+                alert('Please enter both technologies to compare!');
+                return;
+            }
+
+            // Show loader and hide previous results
+            loader.style.display = 'block';
+            comparisonResults.innerHTML = '';
+
+            const response = await fetch('/compare', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ tech1, tech2 })
+            });
+
+            const data = await response.json();
+            
+            // Hide loader once data is fetched
+            loader.style.display = 'none';
+
+            if (data.success) {
+                comparisonResults.innerHTML = `
+                    <div class="card">
+                        <h2>${data.tech1}</h2>
+                        <p>${data.tech1Info}</p>
+                    </div>
+                    <div class="card">
+                        <h2>${data.tech2}</h2>
+                        <p>${data.tech2Info}</p>
+                    </div>
+                `;
+            } else {
+                alert('Comparison failed, please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
